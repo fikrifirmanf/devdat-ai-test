@@ -1,0 +1,10 @@
+Flask
+Flask-Cors
+Flask-Swagger
+Flask-JWT-Extended
+bcrypt
+sqlalchemy
+tensorflow
+Pillow
+nbformat
+nbconvert

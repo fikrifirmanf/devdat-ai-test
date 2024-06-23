@@ -1,187 +1,66 @@
-# DevDat.AI API Documentation
+# AI-Based Image Prediction API
 
-This repository contains the API for DevDat.AI, a platform for plant disease detection.
+This is an AI-powered API built with Flask that allows users to upload images and get predictions from a pre-trained machine learning model. 
 
-## API Endpoints
+## Features
 
-### 1. Users
+* User registration and login with email/password authentication.
+* Image upload and prediction using a pre-trained model.
+* Storage of prediction history for each user. 
+* API documentation (to be added).
+* Containerized deployment using Docker. 
 
-**Endpoint:** `/users`
+## Installation & Running
 
-**Methods:**
+### 1. Requirements
 
-- **POST:** Create a new user.
-  - **Request Body:**
-    ```json
-    {
-      "email": "user@example.com",
-      "password": "password123"
-    }
-    ```
-  - **Response:**
-    ```json
-    {
-        "data": {
-            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmaWtyaTJAZmlrcmlmaXJtYW5mLmNvbSJ9.n13ZIjpLi5h_Xr7eisz68Mz3ntjQyu3aQORn4C7A1CQ",
-            "email": "fikri2@fikrifirmanf.com",
-            "id": 3,
-            "name": "user@example.com",
-            "token_type": "bearer"
-        },
-        "message": "User created successfully"
-    }   
-    ```
+* **Python 3.9 or higher:**  Download and install Python from [https://www.python.org/](https://www.python.org/).
+* **Virtual Environment (recommended):** Create a virtual environment to manage dependencies for this project:
 
-- **GET:** Get all users.
-  - **Response:**
-    ```json
-    {
-        "data": [
-            {
-                "email": "fikri@devdat.ai",
-                "id": 1,
-                "name": "Test User"
-            },
-            {
-                "email": "fikri@fikrifirmanf.com",
-                "id": 2,
-                "name": "Fkri Firman F"
-            },
-            {
-                "email": "fikri2@fikrifirmanf.com",
-                "id": 3,
-                "name": "Fkri Firman F2"
-            }
-        ],
-        "message": "Users retrieved successfully"
-    }
-    ```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # Activate the virtual environment 
+   ```
+* **Dependencies:** Install the required Python packages:
 
-- **GET:** Get a specific user by ID.
-  - **URL:** `/users/{user_id}`
-  - **Response:**
-    ```json
-    {
-        "data": {
-            "email": "fikri@devdat.ai",
-            "id": 1,
-            "name": "Test User"
-        },
-        "message": "User retrieved successfully"
-    }
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- **PUT:** Update a specific user by ID.
-  - **URL:** `/users/{user_id}`
-  - **Request Body:**
-    ```json
-    {"name": "Joss"}
-    ```
+### 2. Configuration
 
-  - **Response:**
-    ```json
-    {
-        "data": {
-            "email": "fikri@devdat.ai",
-            "id": 1,
-            "name": "Test User"
-        },
-        "message": "User retrieved successfully"
-    }
-    ```
+* **Database:** 
+   * **Create Database:** Create an empty SQLite database file named `devdat.db` in the project root directory.
 
-### 2. Predictions
+### 3. Running Locally Without Docker
 
-**Endpoint:** `/predictions`
+1. **Create Tables:** 
+   ```bash
+   flask shell 
+   >>> from utils.db import Base, engine
+   >>> Base.metadata.create_all(bind=engine) 
+   >>> exit()
+   ```
 
-**Methods:**
+2. **Run the Flask app:**
+   ```bash
+   flask run
+   ```
+   * The API will be available at `http://127.0.0.1:5000/`
 
-- **POST:** Create a new prediction.
-  - **Request Body:**
-    ```json
-    {
-      "image": (Image file)
-    }
-    ```
-  - **Response:**
-    ```json
-    {
-      "data": {
-        "message": "Prediction created successfully",
-        "prediction_id": 123
-      }
-    }
-    ```
+### 4. Running with Docker
 
-### 3. Interactions
+1. **Build Docker Images:**
+   ```bash
+   docker-compose build
+   ```
 
-**Endpoint:** `/interactions`
+2. **Start Docker Containers:**
+   ```bash
+   docker-compose up -d
+   ```
 
-**Methods:**
+3. **Access the API:**
+   * The API will be available at `http://devdat-api.fikrifirmanf.com/` (replace with your actual domain).
+   * The API documentation using postman please check the file in email that I sent
 
-- **GET:** Get all interactions.
-  - **Response:**
-    ```json
-    {
-      "data": [
-        {
-          "id": 123,
-          "user_id": 123,
-          "prediction_id": 123,
-          "timestamp": "2023-12-12T12:34:56.789Z",
-          "data": "Image uploaded: image.jpg"
-        },
-        ...
-      ]
-    }
-    ```
-
-- **GET:** Get interactions for a specific user.
-  - **URL:** `/interactions/{user_id}`
-  - **Response:**
-    ```json
-    {
-      "data": [
-        {
-          "id": 123,
-          "prediction_id": 123,
-          "timestamp": "2023-12-12T12:34:56.789Z",
-          "data": "Image uploaded: image.jpg"
-        },
-        ...
-      ]
-    }
-    ```
-
-- **GET:** Get interactions for a specific prediction.
-  - **URL:** `/interactions/prediction/{prediction_id}`
-  - **Response:**
-    ```json
-    {
-      "data": [
-        {
-          "id": 123,
-          "user_id": 123,
-          "timestamp": "2023-12-12T12:34:56.789Z",
-          "data": "Image uploaded: image.jpg"
-        },
-        ...
-      ]
-    }
-    ```
-
-## Authentication
-
-The API uses JWT (JSON Web Token) for authentication. To access protected endpoints, you need to obtain an access token by logging in.
-
-**Endpoint:** `/auth/login`
-
-**Method:** POST
-
-**Request Body:**
-
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
